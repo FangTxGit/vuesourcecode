@@ -13,6 +13,7 @@ export default {
     },
     plugins: [
         babel({
+            //=> 设置打包文件
             exclude: "node_modules/**"
         }),
         //=> 开发服务
