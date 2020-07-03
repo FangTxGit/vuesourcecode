@@ -2,15 +2,20 @@
  * 数据劫持方法 通过Object.defindProperty 方法将数据添加get set方法
  */
 
-import { isObjectOrArray, isArray } from '../util/index'
+import { isObjectOrArray, isArray, def } from '../util/index'
 import { arrayMethods } from '../array'
 
 class ObServer {
     constructor(value) {
+        //=> 此处将this绑定到监听的属性上
+        //=> 作用有2个
+        //=> 第一 ：每一个挟持过的数据都有__ob__属性
+        //=> 第二 ：可以设置不允许枚举 这样不会无限循环
+        def(value, '__ob__', this)
         if (isArray(value)) {
             //=> 如果是数组的话 需要对数组中的每项内容做数据挟持 而不是对索引进行挟持
             this.observeArray(value)
-            //=> 数组中存在一些能改变数组自身数据的方法 比如push pop shift unshift sort slice reverse 需要将这些方法重写
+            //=> 数组中存在一些能改变数组自身数据的方法 比如push pop shift unshift sort slice reverse 需要将这些方法重写,重写之后 执行方法也会对新增加的数据进行数据挟持
             value.__proto__ = arrayMethods
         } else {
             //=> 对对象元素进行数据挟持

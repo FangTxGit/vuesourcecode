@@ -10,3 +10,10 @@ export function isObjectOrArray (data) {
 export function isArray (data) {
     return Array.isArray(data)
 }
+export function def (data, key, value) {
+    Object.defineProperty(data, key, {
+        configurable: false,
+        enumerable: false,
+        value
+    })
+}
